@@ -13,15 +13,15 @@ import java.util.TimeZone;
 @Configuration
 public class JacksonConfig {
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
-    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
+	private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        return builder -> {
-            builder.serializers(new LocalDateSerializer(DATE_FORMAT));
-            builder.serializers(new LocalDateTimeSerializer(DATE_TIME_FORMAT));
-            builder.timeZone(TimeZone.getTimeZone("Asia/Seoul"));
-        };
-    }
+	@Bean
+	public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+		return builder -> {
+			builder.serializers(new LocalDateSerializer(DATE_FORMAT));
+			builder.serializers(new LocalDateTimeSerializer(DATE_TIME_FORMAT));
+			builder.timeZone(TimeZone.getTimeZone("Asia/Seoul"));
+		};
+	}
 }

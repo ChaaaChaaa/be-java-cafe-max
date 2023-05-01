@@ -7,21 +7,22 @@ import kr.codesqaud.cafe.domain.Member;
 import kr.codesqaud.cafe.domain.Post;
 import kr.codesqaud.cafe.dto.page.StandardPage;
 
-
 public interface PostRepository {
-    Long save(Post post, Member member);
+	Long save(Post post, Member member);
 
-    Optional<Post> findById(Long id);
+	Optional<Post> findById(Long id);
 
-    List<Post> findPostByWriterEmail(String writerEmail);
-    List<Post> findPagingPosts(StandardPage standardPage);
-    List<Post> findAll();
+	List<Post> findPostByWriterEmail(String writerEmail);
 
-    void update(Post post);
+	List<Post> findPagingPosts(StandardPage standardPage);
 
-    void increaseViews(Long id);
+	List<Post> findAll();
 
-    void deleteAll();
+	void update(Post post);
 
-    void deleteId(Long id);
+	void increaseViews(Long id);
+
+	void deleteAll();
+
+	void deleteId(Long id);
 }

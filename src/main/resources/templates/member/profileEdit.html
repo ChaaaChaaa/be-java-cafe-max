@@ -11,8 +11,9 @@
         <div>
             <h2 class="title">회원 수정</h2>
         </div>
-        <form th:action="@{/members/{email}/profile (email=${email})}" th:method="put" th:object="${profileEditRequestDto}">
-                  <div class="form-floating">
+        <form th:action="@{/members/{email}/profile (email=${email})}" th:method="put"
+              th:object="${profileEditRequestDto}">
+            <div class="form-floating">
                 <input type="text" class="form-control" id="nickname" name="nickname" placeholder="닉네임을 입력해주세요"
                        aria-describedby="validationNameFeedback" th:errorclass="is-invalid" th:field="*{nickname}">
                 <label for="nickname">닉네임</label>

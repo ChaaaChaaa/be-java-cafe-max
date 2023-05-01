@@ -1,5 +1,5 @@
 .title {
-    margin-top : 10%;
+    margin-top: 10%;
 }
 
 .form-floating {
@@ -15,6 +15,6 @@ form {
 }
 
 textarea {
-    resize: none!important;
-    height: 800px!important;
+    resize: none !important;
+    height: 800px !important;
 }

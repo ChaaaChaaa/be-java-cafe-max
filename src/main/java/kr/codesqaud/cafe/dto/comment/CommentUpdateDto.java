@@ -4,23 +4,23 @@ import kr.codesqaud.cafe.domain.Comment;
 
 public class CommentUpdateDto {
 
-    private Long id;
-    private String content;
+	private final Long id;
+	private final String content;
 
-    public CommentUpdateDto(Long id, String content) {
-        this.id = id;
-        this.content = content;
-    }
+	public CommentUpdateDto(Long id, String content) {
+		this.id = id;
+		this.content = content;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public Comment toEntity() {
-        return Comment.updateOf(id, content);
-    }
+	public Comment toEntity() {
+		return Comment.updateOf(id, content);
+	}
 }

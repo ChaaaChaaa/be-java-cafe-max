@@ -14,37 +14,36 @@ import static kr.codesqaud.cafe.exception.common.CommonExceptionType.ACCESS_DENI
 
 @Service
 public class CommentService {
-    private final CommentRepository commentRepository;
+	private final CommentRepository commentRepository;
 
-    public CommentService(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
-    }
+	public CommentService(CommentRepository commentRepository) {
+		this.commentRepository = commentRepository;
+	}
 
-    @Transactional
-    public CommentReadDto save(CommentWriteDto commentWriteDto) {
-        return CommentReadDto.from(commentRepository.save(commentWriteDto.toEntity()));
-    }
+	@Transactional
+	public CommentReadDto save(CommentWriteDto commentWriteDto) {
+		return CommentReadDto.from(commentRepository.save(commentWriteDto.toEntity()));
+	}
 
-    @Transactional(readOnly = true)
-    public CommentListDto findComments(Long postId) {
-        return CommentListDto.of(commentRepository.findComments(postId));
-    }
+	@Transactional(readOnly = true)
+	public CommentListDto findComments(Long postId) {
+		return CommentListDto.of(commentRepository.findComments(postId));
+	}
 
+	@Transactional
+	public void update(CommentUpdateDto commentUpdateDto) {
+		commentRepository.update(commentUpdateDto.toEntity());
+	}
 
-    @Transactional
-    public void update(CommentUpdateDto commentUpdateDto) {
-        commentRepository.update(commentUpdateDto.toEntity());
-    }
+	@Transactional
+	public void deleteId(String commentMemberEmail, String writerEmail, Long commentId) {
+		validateCommentUser(writerEmail, commentMemberEmail);
+		commentRepository.deleteCommentId(commentId);
+	}
 
-    @Transactional
-    public void deleteId(String commentMemberEmail, String writerEmail, Long commentId) {
-        validateCommentUser(writerEmail, commentMemberEmail);
-        commentRepository.deleteCommentId(commentId);
-    }
-
-    private void validateCommentUser(final String writerEmail, final String commentMemberEmail) {
-        if (!writerEmail.equals(commentMemberEmail)) {
-            throw new CommonException(ACCESS_DENIED);
-        }
-    }
+	private void validateCommentUser(final String writerEmail, final String commentMemberEmail) {
+		if (!writerEmail.equals(commentMemberEmail)) {
+			throw new CommonException(ACCESS_DENIED);
+		}
+	}
 }

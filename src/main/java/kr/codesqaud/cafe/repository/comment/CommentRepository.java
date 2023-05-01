@@ -5,9 +5,13 @@ import java.util.List;
 import kr.codesqaud.cafe.domain.Comment;
 
 public interface CommentRepository {
-    List<Comment> findComments(Long commentId);
-    Comment save(Comment comment);
-    void update(Comment comment);
-    void deleteCommentId(Long commentId);
-    void deletePostId(Long postId);
+	List<Comment> findComments(Long commentId);
+
+	Comment save(Comment comment);
+
+	void update(Comment comment);
+
+	void deleteCommentId(Long commentId);
+
+	void deletePostId(Long postId);
 }

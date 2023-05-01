@@ -19,28 +19,30 @@ import kr.codesqaud.cafe.session.LoginMemberSession;
 @RequestMapping("/posts/{postId}")
 @RestController
 public class CommentController {
-    private final CommentService commentService;
+	private final CommentService commentService;
 
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+	public CommentController(CommentService commentService) {
+		this.commentService = commentService;
+	}
 
-    @PostMapping("/comments")
-    public CommentReadDto writeComment(@PathVariable Long postId, @RequestBody CommentWriteDto commentWriteDto, @SessionAttribute("loginMember") LoginMemberSession loginMemberSession) {
-        commentWriteDto.initMemberInfo(loginMemberSession.getMemberId(), loginMemberSession.getMemberEmail(),postId);
-        return commentService.save(commentWriteDto);
-    }
-    @PutMapping("/comments")
-    public String update(@PathVariable Long postId, @RequestBody CommentUpdateDto commentUpdateDto) {
-        commentService.update(commentUpdateDto);
-        return "redirect:/posts/" + postId;
-    }
+	@PostMapping("/comments")
+	public CommentReadDto writeComment(@PathVariable Long postId, @RequestBody CommentWriteDto commentWriteDto,
+		@SessionAttribute("loginMember") LoginMemberSession loginMemberSession) {
+		commentWriteDto.initMemberInfo(loginMemberSession.getMemberId(), loginMemberSession.getMemberEmail(), postId);
+		return commentService.save(commentWriteDto);
+	}
 
+	@PutMapping("/comments")
+	public String update(@PathVariable Long postId, @RequestBody CommentUpdateDto commentUpdateDto) {
+		commentService.update(commentUpdateDto);
+		return "redirect:/posts/" + postId;
+	}
 
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> delete(@PathVariable Long postId, @PathVariable Long commentId, @SessionAttribute("loginMember") LoginMemberSession loginMemberSession) {
-        String commentWriteMemberEmail = loginMemberSession.getMemberEmail();
-        commentService.deleteId(commentWriteMemberEmail, loginMemberSession.getMemberEmail(), commentId);
-        return ResponseEntity.noContent().build();
-    }
+	@DeleteMapping("/comments/{commentId}")
+	public ResponseEntity<Void> delete(@PathVariable Long postId, @PathVariable Long commentId,
+		@SessionAttribute("loginMember") LoginMemberSession loginMemberSession) {
+		String commentWriteMemberEmail = loginMemberSession.getMemberEmail();
+		commentService.deleteId(commentWriteMemberEmail, loginMemberSession.getMemberEmail(), commentId);
+		return ResponseEntity.noContent().build();
+	}
 }

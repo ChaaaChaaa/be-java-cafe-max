@@ -4,51 +4,51 @@ import kr.codesqaud.cafe.domain.Comment;
 
 public class CommentWriteDto {
 
-    private Long memberId;
-    private String memberEmail;
-    private Long commentId;
-    private Long postId;
-    private String content;
+	private Long memberId;
+	private String memberEmail;
+	private Long commentId;
+	private Long postId;
+	private String content;
 
-    public CommentWriteDto() {
+	public CommentWriteDto() {
 
-    }
+	}
 
-    public CommentWriteDto(Long memberId, String memberEmail, Long commentId, Long postId, String content) {
-        this.memberId = memberId;
-        this.memberEmail = memberEmail;
-        this.commentId = commentId;
-        this.postId = postId;
-        this.content = content;
-    }
+	public CommentWriteDto(Long memberId, String memberEmail, Long commentId, Long postId, String content) {
+		this.memberId = memberId;
+		this.memberEmail = memberEmail;
+		this.commentId = commentId;
+		this.postId = postId;
+		this.content = content;
+	}
 
-    public Long getCommentId() {
-        return commentId;
-    }
+	public Long getCommentId() {
+		return commentId;
+	}
 
-    public Long getPostId() {
-        return postId;
-    }
+	public Long getPostId() {
+		return postId;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public Long getMemberId() {
-        return memberId;
-    }
+	public Long getMemberId() {
+		return memberId;
+	}
 
-    public void initMemberInfo(Long memberId,String memberEmail,Long postId) {
-        this.memberId = memberId;
-        this.memberEmail = memberEmail;
-        this.postId = postId;
-    }
+	public void initMemberInfo(Long memberId, String memberEmail, Long postId) {
+		this.memberId = memberId;
+		this.memberEmail = memberEmail;
+		this.postId = postId;
+	}
 
-    public String getMemberEmail() {
-        return memberEmail;
-    }
+	public String getMemberEmail() {
+		return memberEmail;
+	}
 
-    public Comment toEntity() {
-        return new Comment(postId, memberId, memberEmail, content);
-    }
+	public Comment toEntity() {
+		return new Comment(postId, memberId, memberEmail, content);
+	}
 }

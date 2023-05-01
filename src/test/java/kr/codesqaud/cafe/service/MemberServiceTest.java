@@ -1,6 +1,5 @@
 package kr.codesqaud.cafe.service;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,117 +23,123 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Sql(scripts = "classpath:schema.sql")
 class MemberServiceTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
+	@Autowired
+	private MemberRepository memberRepository;
 
-    @Autowired
-    private MemberService memberService;
+	@Autowired
+	private MemberService memberService;
 
-    @BeforeEach
-    void clean() {
-        memberRepository.deleteAll();
-    }
+	@BeforeEach
+	void clean() {
+		memberRepository.deleteAll();
+	}
 
+	@Test
+	@DisplayName("회원 저장 성공")
+	void join() {
+		MemberJoinRequestDto memberLoginRequestDto = basicMemberData();
 
-    @Test
-    @DisplayName("회원 저장 성공")
-    void join() {
-        MemberJoinRequestDto memberLoginRequestDto = basicMemberData();
+		Long savedMemberId = memberService.join(memberLoginRequestDto);
 
-        Long savedMemberId = memberService.join(memberLoginRequestDto);
+		//then
+		Member targetMember = memberRepository.findById(savedMemberId).orElseThrow();
+		assertAll(() -> assertEquals(savedMemberId, targetMember.getMemberId()),
+			() -> assertEquals("test@gmail.com", targetMember.getEmail()),
+			() -> assertEquals("testtest", targetMember.getPassword()),
+			() -> assertEquals("차차", targetMember.getNickname()));
+	}
 
-        //then
-        Member targetMember = memberRepository.findById(savedMemberId).orElseThrow();
-        assertAll(() -> assertEquals(savedMemberId, targetMember.getMemberId()), () -> assertEquals("test@gmail.com", targetMember.getEmail()), () -> assertEquals("testtest", targetMember.getPassword()), () -> assertEquals("차차", targetMember.getNickname()));
-    }
+	@Test
+	@DisplayName("기존 가입된 모든 회원들을 조회하면 모든 회원의 정보가 조회된다.")
+	void findAll() {
+		//given
+		int memberNumber = 10;
+		IntStream.rangeClosed(1, memberNumber).forEach(count -> {
+			String email = String.format("test%d@test.com", count);
+			String password = String.format("test%d", count);
+			String nickname = String.format("chacha%d", count);
+			memberService.join(new MemberJoinRequestDto(email, password, nickname));
+		});
 
+		//when
+		List<MemberResponseDto> members = memberService.findAll();
 
-    @Test
-    @DisplayName("기존 가입된 모든 회원들을 조회하면 모든 회원의 정보가 조회된다.")
-    void findAll() {
-        //given
-        int memberNumber = 10;
-        IntStream.rangeClosed(1, memberNumber).forEach(count -> {
-            String email = String.format("test%d@test.com", count);
-            String password = String.format("test%d", count);
-            String nickname = String.format("chacha%d", count);
-            memberService.join(new MemberJoinRequestDto(email, password, nickname));
-        });
+		//then
+		assertEquals(memberNumber, members.size());
+	}
 
-        //when
-        List<MemberResponseDto> members = memberService.findAll();
+	@Test
+	@DisplayName("기존 가입된 회원의 id로 회원을 조회하면 해당 회원의 정보가 조회된다.")
+	void findById() {
+		MemberJoinRequestDto requestDtoMember = basicMemberData();
+		Long memberId = memberService.join(requestDtoMember);
 
-        //then
-        assertEquals(memberNumber, members.size());
-    }
+		//when
+		MemberResponseDto memberResponseDto = memberService.findById(memberId);
 
-    @Test
-    @DisplayName("기존 가입된 회원의 id로 회원을 조회하면 해당 회원의 정보가 조회된다.")
-    void findById() {
-        MemberJoinRequestDto requestDtoMember = basicMemberData();
-        Long memberId = memberService.join(requestDtoMember);
+		//then
+		assertAll(() -> assertEquals(memberId, memberResponseDto.getMemberId()),
+			() -> assertEquals(requestDtoMember.getEmail(), "test@gmail.com"),
+			() -> assertEquals(requestDtoMember.getNickname(), "차차"));
+	}
 
-        //when
-        MemberResponseDto memberResponseDto = memberService.findById(memberId);
+	@Test
+	@DisplayName("기존 가입 회원의 이메일 주소로 회원을 조회하면 해당 회원의 정보가 조회된다.")
+	void findByEmail() {
+		MemberJoinRequestDto requestDtoMember = basicMemberData();
+		Long memberId = memberService.join(requestDtoMember);
+		String memberEmail = memberService.findById(memberId).getEmail();
 
-        //then
-        assertAll(() -> assertEquals(memberId, memberResponseDto.getMemberId()), () -> assertEquals(requestDtoMember.getEmail(), "test@gmail.com"), () -> assertEquals(requestDtoMember.getNickname(), "차차"));
-    }
+		//when
+		MemberResponseDto memberResponseDto = memberService.findByEmail(memberEmail);
 
-    @Test
-    @DisplayName("기존 가입 회원의 이메일 주소로 회원을 조회하면 해당 회원의 정보가 조회된다.")
-    void findByEmail() {
-        MemberJoinRequestDto requestDtoMember = basicMemberData();
-        Long memberId = memberService.join(requestDtoMember);
-        String memberEmail = memberService.findById(memberId).getEmail();
+		//then
+		assertAll(() -> assertEquals(memberEmail, memberResponseDto.getEmail()),
+			() -> assertEquals("차차", memberResponseDto.getNickname()),
+			() -> assertEquals("testtest", memberResponseDto.getPassword()));
+	}
 
-        //when
-        MemberResponseDto memberResponseDto = memberService.findByEmail(memberEmail);
+	@Test
+	void update() {
+		//given
+		Long saveId = memberService.join(basicMemberData());
+		ProfileEditRequestDto profileEditRequestDto = new ProfileEditRequestDto(saveId, basicMemberData().getEmail(),
+			dummyMemberData().getPassword(), dummyMemberData().getNickname());
 
-        //then
-        assertAll(() -> assertEquals(memberEmail, memberResponseDto.getEmail()), () -> assertEquals("차차", memberResponseDto.getNickname()), () -> assertEquals("testtest", memberResponseDto.getPassword()));
-    }
+		//when
+		memberService.update(profileEditRequestDto);
 
+		//then
+		Member targetMember = memberRepository.findById(saveId).orElseThrow();
+		assertAll(() -> assertEquals(saveId, targetMember.getMemberId()),
+			() -> assertEquals("피오니", targetMember.getNickname()));
+	}
 
-    @Test
-    void update() {
-        //given
-        Long saveId = memberService.join(basicMemberData());
-        ProfileEditRequestDto profileEditRequestDto = new ProfileEditRequestDto(saveId, basicMemberData().getEmail(), dummyMemberData().getPassword(), dummyMemberData().getNickname());
+	@Test
+	void deleteById() {
+		//given
+		MemberJoinRequestDto memberLoginRequestDto = basicMemberData();
+		Long userId = memberService.join(memberLoginRequestDto);
 
-        //when
-        memberService.update(profileEditRequestDto);
+		//when
+		memberService.deleteById(userId);
 
-        //then
-        Member targetMember = memberRepository.findById(saveId).orElseThrow();
-        assertAll(() -> assertEquals(saveId, targetMember.getMemberId()), () -> assertEquals("피오니", targetMember.getNickname()));
-    }
+		//then
+		List<MemberResponseDto> members = memberService.findAll();
+		assertEquals(members.size(), 0);
+	}
 
-    @Test
-    void deleteById() {
-        //given
-        MemberJoinRequestDto memberLoginRequestDto = basicMemberData();
-        Long userId = memberService.join(memberLoginRequestDto);
+	private MemberJoinRequestDto basicMemberData() {
+		String email = "test@gmail.com";
+		String password = "testtest";
+		String nickname = "차차";
+		return new MemberJoinRequestDto(email, password, nickname);
+	}
 
-        //when
-        memberService.deleteById(userId);
-
-        //then
-        List<MemberResponseDto> members = memberService.findAll();
-        assertEquals(members.size(), 0);
-    }
-
-    private MemberJoinRequestDto basicMemberData() {
-        String email = "test@gmail.com";
-        String password = "testtest";
-        String nickname = "차차";
-        return new MemberJoinRequestDto(email, password, nickname);
-    }
-
-    private MemberJoinRequestDto dummyMemberData() {
-        String email = "dummy@gmail.com";
-        String password = "dummydummy";
-        String nickname = "피오니";
-        return new MemberJoinRequestDto(email, password, nickname);
-    }
+	private MemberJoinRequestDto dummyMemberData() {
+		String email = "dummy@gmail.com";
+		String password = "dummydummy";
+		String nickname = "피오니";
+		return new MemberJoinRequestDto(email, password, nickname);
+	}
 }

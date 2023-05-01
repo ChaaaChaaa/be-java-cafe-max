@@ -15,6 +15,7 @@ function editAjax(e) {
 
     updateAjax(commentId, newContent); // 수정 Ajax 요청 함수 호출
 }
+
 function writeAjax(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -55,7 +56,7 @@ function updateAjax(commentId, newContent) {
     $.ajax({
         type: 'put',
         url: `/comments/${commentId}`,
-        data: { content: newContent },
+        data: {content: newContent},
         dataType: 'json',
         success: function (data, status) {
             console.log('댓글이 업데이트되었습니다.');

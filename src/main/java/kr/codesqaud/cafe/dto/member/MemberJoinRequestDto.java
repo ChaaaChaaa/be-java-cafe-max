@@ -10,51 +10,51 @@ import javax.validation.constraints.Size;
 import kr.codesqaud.cafe.domain.Member;
 
 public class MemberJoinRequestDto {
-    @NotBlank(message = "이메일을 입력하세요")
-    @Email(message = "이메일 형식이 올바르지 않습니다.")
-    private String email;
+	@NotBlank(message = "이메일을 입력하세요")
+	@Email(message = "이메일 형식이 올바르지 않습니다.")
+	private String email;
 
-    @NotBlank(message = "비밀번호를 입력하세요")
-    @Size(min = 8, max = 12, message = "비밀번호는 {min}~{max} 길이로 입력하세요.")
-    @Pattern(regexp = "[a-zA-Z0-9!@#$%^&*()_+|~=`{}\\[\\]:\";'\\\\<>,.?/\\-]+", message = "비밀번호는 알파벳, 숫자, 특수문자만 가능합니다.")
-    private String password;
+	@NotBlank(message = "비밀번호를 입력하세요")
+	@Size(min = 8, max = 12, message = "비밀번호는 {min}~{max} 길이로 입력하세요.")
+	@Pattern(regexp = "[a-zA-Z0-9!@#$%^&*()_+|~=`{}\\[\\]:\";'\\\\<>,.?/\\-]+", message = "비밀번호는 알파벳, 숫자, 특수문자만 가능합니다.")
+	private String password;
 
-    @NotBlank(message = "닉네임을 입력하세요")
-    @Size(min = 2, max = 10, message = "유효한 닉네임을 입력하세요")
-    @Pattern(regexp = "^[가-힣]{2,4}$", message = "닉네임 형식에 맞게 입력하세요.")
-    private String nickname;
+	@NotBlank(message = "닉네임을 입력하세요")
+	@Size(min = 2, max = 10, message = "유효한 닉네임을 입력하세요")
+	@Pattern(regexp = "^[가-힣]{2,4}$", message = "닉네임 형식에 맞게 입력하세요.")
+	private String nickname;
 
-    public MemberJoinRequestDto(String email, String password, String nickname) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-    }
+	public MemberJoinRequestDto(String email, String password, String nickname) {
+		this.email = email;
+		this.password = password;
+		this.nickname = nickname;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getNickname() {
-        return nickname;
-    }
+	public String getNickname() {
+		return nickname;
+	}
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
-    public Member toUser() {
-        return new Member(this.email, this.password, this.nickname, LocalDateTime.now());
-    }
+	public Member toUser() {
+		return new Member(this.email, this.password, this.nickname, LocalDateTime.now());
+	}
 }
