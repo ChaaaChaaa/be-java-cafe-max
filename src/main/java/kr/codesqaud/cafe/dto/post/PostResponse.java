@@ -24,7 +24,7 @@ public class PostResponse {
     }
 
     public static PostResponse of(Post post, WriterResponse writerResponse) {
-        return new PostResponse(post.getid(), post.getTitle(), post.getContent(), writerResponse, post.getWriteDate(), post.getViews());
+        return new PostResponse(post.getId(), post.getTitle(), post.getContent(), writerResponse, post.getWriteDate(), post.getViews());
     }
 
     public Long getId() {

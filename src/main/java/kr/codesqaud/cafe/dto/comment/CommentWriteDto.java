@@ -10,6 +10,10 @@ public class CommentWriteDto {
     private Long postId;
     private String content;
 
+    public CommentWriteDto() {
+
+    }
+
     public CommentWriteDto(Long memberId, String memberEmail, Long commentId, Long postId, String content) {
         this.memberId = memberId;
         this.memberEmail = memberEmail;
@@ -34,9 +38,10 @@ public class CommentWriteDto {
         return memberId;
     }
 
-    public void initMemberInfo(Long memberId,String memberEmail) {
+    public void initMemberInfo(Long memberId,String memberEmail,Long postId) {
         this.memberId = memberId;
         this.memberEmail = memberEmail;
+        this.postId = postId;
     }
 
     public String getMemberEmail() {

@@ -62,4 +62,8 @@ public class Comment {
     public LocalDateTime getUpdatedDate() {
         return updatedDate;
     }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
+    }
 }
