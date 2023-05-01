@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import kr.codesqaud.cafe.domain.Member;
 import kr.codesqaud.cafe.domain.Post;
+import kr.codesqaud.cafe.dto.page.StandardPage;
 
 @Primary
 @Repository
@@ -60,6 +61,15 @@ public class JdbcPostRepository implements PostRepository {
         String sql = "SELECT id,title,content,writer_email,write_date,views FROM post WHERE writerEmail = :writerEmail ORDER BY write_date";
         SqlParameterSource parameter = new MapSqlParameterSource("writerEmail", writerEmail);
         return jdbcTemplate.query(sql, parameter, postRowMapper);
+    }
+
+    @Override
+    public List<Post> findPagingPosts(StandardPage standardPage) {
+        String sql = "SELECT id,title,content,writer_email,write_date,views FROM post ORDER BY write_date DESC LIMIT :offset, :limit";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("offset", standardPage.getSkip());
+        params.addValue("limit", standardPage.getAmount());
+        return jdbcTemplate.query(sql, params, postRowMapper);
     }
 
     @Override

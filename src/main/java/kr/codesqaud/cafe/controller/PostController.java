@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
@@ -17,8 +18,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import kr.codesqaud.cafe.domain.Post;
+import kr.codesqaud.cafe.dto.page.Pageable;
+import kr.codesqaud.cafe.dto.page.StandardPage;
 import kr.codesqaud.cafe.dto.post.PostEditRequest;
 
+import kr.codesqaud.cafe.dto.post.PostResponse;
 import kr.codesqaud.cafe.dto.post.PostWriteRequest;
 import kr.codesqaud.cafe.service.CommentService;
 import kr.codesqaud.cafe.service.PostService;
@@ -36,9 +40,14 @@ public class PostController {
     }
 
     @GetMapping
-    public String posts(Model model) {
-        model.addAttribute("postResponses", postService.findAll());
-        return "post/all";
+    public String posts(@RequestParam(defaultValue = "1") int page, Model model) {
+        StandardPage standardPage = new StandardPage(page);
+        List<PostResponse> postResponses = postService.getPagingPosts(standardPage);
+        int totalPage = postService.getTotalPage();
+
+        model.addAttribute("postResponses", postResponses);
+        model.addAttribute("pageable", new Pageable(standardPage, totalPage));
+        return "post/posts";
     }
 
     @PostMapping("/write")

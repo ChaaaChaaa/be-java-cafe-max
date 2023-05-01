@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import kr.codesqaud.cafe.domain.Member;
 import kr.codesqaud.cafe.domain.Post;
+import kr.codesqaud.cafe.dto.page.StandardPage;
 
 
 public interface PostRepository {
@@ -13,7 +14,7 @@ public interface PostRepository {
     Optional<Post> findById(Long id);
 
     List<Post> findPostByWriterEmail(String writerEmail);
-
+    List<Post> findPagingPosts(StandardPage standardPage);
     List<Post> findAll();
 
     void update(Post post);

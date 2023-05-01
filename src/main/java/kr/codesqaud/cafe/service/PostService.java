@@ -3,6 +3,7 @@ package kr.codesqaud.cafe.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 import kr.codesqaud.cafe.domain.Member;
 import kr.codesqaud.cafe.domain.Post;
+import kr.codesqaud.cafe.dto.page.StandardPage;
 import kr.codesqaud.cafe.dto.post.PostEditRequest;
 import kr.codesqaud.cafe.dto.post.PostResponse;
 import kr.codesqaud.cafe.dto.post.PostWriteRequest;
@@ -69,14 +71,29 @@ public class PostService {
         return postRepository.findPostByWriterEmail(writerEmail);
     }
 
+    @Transactional
+    public List<PostResponse> getPagingPosts(final StandardPage standardPage) {
+        List<Post> posts = postRepository.findPagingPosts(standardPage);
+        List<PostResponse> postList = new ArrayList<>();
+        for (Post post : posts) {
+            postList.add(post.toPostResponse(getWriterResponse(post)));
+        }
+        return postList;
+    }
+
+
     @Transactional(readOnly = true)
     public List<PostResponse> findAll() {
         return postRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparing(Post::getid)
+                .sorted(Comparator.comparing(Post::getId)
                         .reversed())
                 .map(post -> PostResponse.of(post, getWriterResponse(post)))
                 .collect(Collectors.toList());
+    }
+
+    public int getTotalPage(){
+        return findAll().size();
     }
 
     WriterResponse getWriterResponse(Post post) {
