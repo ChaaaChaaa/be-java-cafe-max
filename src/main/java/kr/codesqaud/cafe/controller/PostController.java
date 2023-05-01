@@ -93,7 +93,7 @@ public class PostController {
     public String findPostByWriterEmail(@PathVariable String writerEmail, Model model) {
         List<Post> posts = postService.findPostByWriterEmail(writerEmail);
         model.addAttribute("postResponses", posts);
-        return "post/all";
+        return "post/posts";
     }
 
     @DeleteMapping("/{id}")
